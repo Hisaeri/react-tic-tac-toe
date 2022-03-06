@@ -3,11 +3,13 @@ import "./App.css";
 import GameBoard from "./components/GameBoard";
 
 const App = () => {
-  const [gameMatrix, setGameMatrix] = useState<Array<Array<null | boolean>>>([
+  const baseMatrix = [
     [null, null, null],
     [null, null, null],
     [null, null, null],
-  ]);
+  ];
+  const [gameMatrix, setGameMatrix] =
+    useState<Array<Array<null | boolean>>>(baseMatrix);
   const [currPlayer, setCurrPlayer] = useState<boolean>(false);
 
   const clickCase = (i: number, j: number) => {
@@ -15,15 +17,20 @@ const App = () => {
       setGameMatrix((oldGameMatrix) => {
         const newMatrix = oldGameMatrix.slice();
         newMatrix[i][j] = currPlayer;
-        setCurrPlayer(!currPlayer);
         return newMatrix;
       });
+      setCurrPlayer(!currPlayer);
     }
+  };
+
+  const resetGame = () => {
+    setGameMatrix(baseMatrix);
   };
 
   return (
     <div className="app">
       <h1>Tic Tac Toe</h1>
+      <button onClick={resetGame}>Reset</button>
       <GameBoard
         gameMatrix={gameMatrix}
         currPlayer={currPlayer}

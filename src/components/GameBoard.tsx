@@ -12,8 +12,12 @@ export const GameBoard = (props: GameProps) => {
           <div className="row" key={i}>
             {row.map((col, j) => {
               return (
-                <button key={j} onClick={() => props.clickCase(i, j)}>
-                  {col === true && <span>V</span>}
+                <button
+                  className={"case-btn case-btn_" + col}
+                  key={j}
+                  onClick={() => props.clickCase(i, j)}
+                >
+                  {col === true && <span>O</span>}
                   {col === false && <span>X</span>}
                   {col === null && <span></span>}
                 </button>

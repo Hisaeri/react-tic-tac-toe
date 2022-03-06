@@ -16,7 +16,32 @@
   flex-direction: column;
 }
 
-button {
+button:hover {
+  cursor: pointer;
+}
+
+.case-btn {
   width: 10vw;
   height: 10vw;
+  font-size: 5rem;
+  color: white;
+}
+
+.case-btn_null {
+  background-color: white;
+}
+
+.case-btn_true {
+  background-color: #7272ff;
+}
+.case-btn_true:hover {
+  cursor: default;
+}
+
+.case-btn_false {
+  background-color: #ffcd5e;
+}
+
+.case-btn_false:hover {
+  cursor: default;
 }
