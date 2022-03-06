@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import GameBoard from "./components/GameBoard";
 
-function App() {
+const App = () => {
+  const [gameMatrix, setGameMatrix] = useState<Array<Array<null | boolean>>>([
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ]);
+  const [currPlayer, setCurrPlayer] = useState<boolean>(false);
+
+  const clickCase = (i: number, j: number) => {
+    if (gameMatrix[i][j] === null) {
+      setGameMatrix((oldGameMatrix) => {
+        const newMatrix = oldGameMatrix.slice();
+        newMatrix[i][j] = currPlayer;
+        setCurrPlayer(!currPlayer);
+        return newMatrix;
+      });
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>Tic Tac Toe</h1>
+      <GameBoard
+        gameMatrix={gameMatrix}
+        currPlayer={currPlayer}
+        clickCase={clickCase}
+      ></GameBoard>
+      <div>Winner / Turn</div>
     </div>
   );
-}
+};
 
 export default App;
