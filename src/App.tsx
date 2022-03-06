@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { Matrix, MatrixRow } from "./components/GameBoard.type";
 import GameBoard from "./components/GameBoard";
 
 const App = () => {
@@ -8,8 +9,7 @@ const App = () => {
     [null, null, null],
     [null, null, null],
   ];
-  const [gameMatrix, setGameMatrix] =
-    useState<Array<Array<null | boolean>>>(baseMatrix);
+  const [gameMatrix, setGameMatrix] = useState<Matrix>(baseMatrix);
   const [currPlayer, setCurrPlayer] = useState<boolean>(false);
   const [winner, setWinner] = useState<boolean | undefined | null>(undefined);
 
@@ -30,7 +30,7 @@ const App = () => {
     }
   };
 
-  const getGameWinner = (matrix: Array<Array<null | boolean>>) => {
+  const getGameWinner = (matrix: Matrix) => {
     for (let i = 0; i < matrix.length; i++) {
       if (
         isRowFilledBySamePlayer(matrix[i]) ||
@@ -44,7 +44,7 @@ const App = () => {
     return undefined;
   };
 
-  const isGameBoardFull = (matrix: Array<Array<boolean | null>>) => {
+  const isGameBoardFull = (matrix: Matrix) => {
     for (let i = 0; i < matrix.length; i++) {
       for (let j = 0; j < matrix[i].length; j++) {
         if (matrix[i][j] === null) return false;
@@ -53,7 +53,7 @@ const App = () => {
     return true;
   };
 
-  const isADiagonalFilled = (matrix: Array<Array<boolean | null>>) => {
+  const isADiagonalFilled = (matrix: Matrix) => {
     // Diagonal from top left to bottom right
     if (
       matrix[0][0] !== null &&
@@ -74,10 +74,7 @@ const App = () => {
     return false;
   };
 
-  const isColFilledBySamePlayer = (
-    matrix: Array<Array<boolean | null>>,
-    col: number
-  ) => {
+  const isColFilledBySamePlayer = (matrix: Matrix, col: number) => {
     for (let i = 1; i < matrix.length; i++) {
       if (matrix[i][col] === null || matrix[i][col] !== matrix[i - 1][col]) {
         return false;
@@ -86,7 +83,7 @@ const App = () => {
     return true;
   };
 
-  const isRowFilledBySamePlayer = (row: Array<boolean | null>) => {
+  const isRowFilledBySamePlayer = (row: MatrixRow) => {
     for (let i = 1; i < row.length; i++) {
       if (row[i] === null || row[i] !== row[i - 1]) {
         return false;

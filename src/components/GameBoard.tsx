@@ -1,5 +1,7 @@
+import { Matrix } from "./GameBoard.type";
+
 type GameProps = {
-  gameMatrix: Array<Array<null | boolean>>;
+  gameMatrix: Matrix;
   currPlayer: boolean;
   clickCase: Function;
 };
