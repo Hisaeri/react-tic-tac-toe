@@ -11,15 +11,17 @@ const App = () => {
   const [gameMatrix, setGameMatrix] =
     useState<Array<Array<null | boolean>>>(baseMatrix);
   const [currPlayer, setCurrPlayer] = useState<boolean>(false);
-  const [gameIsOver, setGameIsOver] = useState<boolean>(false);
+  const [winner, setWinner] = useState<boolean | undefined | null>(undefined);
 
   const clickCase = (i: number, j: number) => {
-    if (!gameIsOver && gameMatrix[i][j] === null) {
+    if (winner === undefined && gameMatrix[i][j] === null) {
       setGameMatrix((oldGameMatrix) => {
         const newMatrix = oldGameMatrix.slice();
         newMatrix[i][j] = currPlayer;
-        if (isGameOver(newMatrix)) {
-          setGameIsOver(true);
+
+        const winner = getGameWinner(newMatrix);
+        if (winner !== undefined) {
+          setWinner(winner);
         } else {
           setCurrPlayer(!currPlayer);
         }
@@ -28,20 +30,31 @@ const App = () => {
     }
   };
 
-  const isGameOver = (matrix: Array<Array<null | boolean>>) => {
+  const getGameWinner = (matrix: Array<Array<null | boolean>>) => {
     for (let i = 0; i < matrix.length; i++) {
       if (
         isRowFilledBySamePlayer(matrix[i]) ||
         isColFilledBySamePlayer(matrix, i)
       ) {
-        return true;
+        return currPlayer;
       }
     }
-    if (isADiagonalFilled(matrix)) return true;
-    return false;
+    if (isADiagonalFilled(matrix)) return currPlayer;
+    if (isGameBoardFull(matrix)) return null;
+    return undefined;
+  };
+
+  const isGameBoardFull = (matrix: Array<Array<boolean | null>>) => {
+    for (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix[i].length; j++) {
+        if (matrix[i][j] === null) return false;
+      }
+    }
+    return true;
   };
 
   const isADiagonalFilled = (matrix: Array<Array<boolean | null>>) => {
+    // Diagonal from top left to bottom right
     if (
       matrix[0][0] !== null &&
       matrix[0][0] === matrix[1][1] &&
@@ -49,6 +62,8 @@ const App = () => {
     ) {
       return true;
     }
+
+    // Diagonal from top right to bottom left
     if (
       matrix[0][2] !== null &&
       matrix[0][2] === matrix[1][1] &&
@@ -83,20 +98,29 @@ const App = () => {
   const resetGame = () => {
     setGameMatrix(baseMatrix);
     setCurrPlayer(false);
-    setGameIsOver(false);
+    setWinner(undefined);
   };
 
   return (
     <div className="app">
       <h1>Tic Tac Toe</h1>
-      <h2>Game {gameIsOver ? "Over" : "Ongoing"}</h2>
-      <p>
-        {"Player "}
-        {currPlayer === false && <span>1</span>}
-        {currPlayer === true && <span>2</span>}
-        {gameIsOver && <span>{" wins."}</span>}
-        {!gameIsOver && <span> {"'s turn"}</span>}
-      </p>
+      <h2>Game {winner !== undefined ? "Over" : "Ongoing"}</h2>
+      {winner === undefined && (
+        <p>
+          {"Player "}
+          {currPlayer === false && <span>1</span>}
+          {currPlayer === true && <span>2</span>}
+          {"'s turn"}
+        </p>
+      )}
+      {winner !== undefined && (
+        <p>
+          {"Winner is: "}
+          {winner === null && <span>Nobody.</span>}
+          {winner === false && <span>Player 1</span>}
+          {winner === true && <span>Player 2</span>}
+        </p>
+      )}
       <GameBoard
         gameMatrix={gameMatrix}
         currPlayer={currPlayer}
